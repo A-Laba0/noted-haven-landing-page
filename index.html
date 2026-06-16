@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noted Haven</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #2a7a7a;
+      --pink: #e0185a;
+      --light-bg: #1a1a2e;
+      --white: #ffffff;
+      --text-dark: #e8e8e8;
+      --text-muted: #aaaaaa;
+      --bg: #0f0f1a;
+      --card-bg: #1a1a2e;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: var(--text-dark);
+      background: var(--bg);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 64px;
+      text-align: center;
+      border-bottom: 3px solid var(--teal);
+    }
+
+    .hero img {
+      max-width: 320px;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--teal);
+      text-transform: uppercase;
+    }
+
+    .hero h1 span {
+      color: var(--pink);
+    }
+
+    .hero .tagline {
+      margin-top: 14px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .hero .cta {
+      margin-top: 32px;
+      display: inline-block;
+      background: var(--pink);
+      color: var(--white);
+      text-decoration: none;
+      padding: 14px 36px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+
+    .hero .cta:hover { background: #c0134e; }
+
+    /* ── ABOUT ── */
+    .about {
+      background: var(--card-bg);
+      padding: 72px 24px;
+      text-align: center;
+    }
+
+    .about .inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .about h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .about h2 span { color: var(--pink); }
+
+    .about p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .about .divider {
+      width: 56px;
+      height: 4px;
+      background: var(--pink);
+      border: none;
+      border-radius: 2px;
+      margin: 0 auto 28px;
+    }
+
+    .about .btn-contact {
+      display: inline-block;
+      margin-top: 28px;
+      background: transparent;
+      color: var(--pink);
+      text-decoration: none;
+      padding: 12px 32px;
+      border-radius: 4px;
+      border: 2px solid var(--pink);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .about .btn-contact:hover {
+      background: var(--pink);
+      color: var(--white);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--teal);
+      color: var(--white);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    footer .brand-name {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    footer .brand-name span { color: var(--pink); }
+
+    footer .links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    footer .links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    footer .links a:hover { color: var(--white); }
+
+    footer .copy {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.55);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img src="brand_assets/Noted-Haven-Logo.png" alt="Noted-Haven-Logo" />
+    <h1>Noted <span>Haven</span></h1>
+    <p class="tagline">Your Personalized Art &amp; Craft</p>
+    <a class="cta" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">
+      Shop Now
+    </a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about">
+    <div class="inner">
+      <h2>About <span>Us</span></h2>
+      <hr class="divider" />
+      <p>
+        Noted Haven is a Filipino art and craft shop dedicated to creating
+        personalized, handcrafted goods that celebrate your unique story.
+        From custom journals and planners to one-of-a-kind art pieces, every
+        item is made with care and intention.
+      </p>
+      <p>
+        Whether you're looking for a heartfelt gift or something special just
+        for yourself, Noted Haven brings creativity and personality into every
+        piece — because the details matter.
+      </p>
+      <a class="btn-contact" href="mailto:notedhaven@gmail.com">Get in Touch</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="brand-name">Noted <span>Haven</span></div>
+    <div class="links">
+      <a href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">
+        Facebook
+      </a>
+      <a href="mailto:notedhaven@gmail.com">
+        Email Us
+      </a>
+      <a href="#">Sto. Tomas Batangas, Philippines 4234</a>
+    </div>
+    <p class="copy">&copy; 2026 Noted Haven. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
