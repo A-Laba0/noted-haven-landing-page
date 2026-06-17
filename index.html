@@ -3,231 +3,513 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Noted Haven</title>
+  <title>Noted Haven — Custom-printed stationery, made just for you</title>
+  <meta name="description" content="Personalized notebooks, notepads, and bookmarks — designed by you, printed by us in the Philippines, and made to feel unmistakably yours." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --teal: #2a7a7a;
-      --pink: #e0185a;
-      --light-bg: #1a1a2e;
-      --white: #ffffff;
-      --text-dark: #e8e8e8;
-      --text-muted: #aaaaaa;
-      --bg: #0f0f1a;
-      --card-bg: #1a1a2e;
+      --paper:      #F9F9F9;
+      --white:      #FFFFFF;
+      --ink:        #16302F;
+      --ink-soft:   #5C6E6D;
+      --pink:       #E8196E;
+      --pink-dark:  #C9135C;
+      --pink-darker:#A5104C;
+      --pink-tint:  #FCE7F0;
+      --teal:       #1DBDBD;
+      --teal-dark:  #15A0A0;
+      --teal-deep:  #117A7A;
+      --teal-tint:  #E6F7F7;
+      --line:       #E3E8E8;
+
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --body:    'Hanken Grotesk', system-ui, sans-serif;
+      --hand:    'Caveat', 'Segoe Script', cursive;
+
+      --maxw: 1140px;
+      --radius: 14px;
+      --shadow: 0 18px 50px -28px rgba(22, 48, 47, 0.45);
     }
+
+    html { scroll-behavior: smooth; overflow-x: clip; }
 
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      color: var(--text-dark);
-      background: var(--bg);
+      font-family: var(--body);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
     }
 
-    /* ── HERO ── */
-    .hero {
-      background: var(--bg);
-      display: flex;
-      flex-direction: column;
+    h1, h2, h3 { font-family: var(--display); line-height: 1.08; letter-spacing: -0.02em; }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .eyebrow {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      padding: 80px 24px 64px;
-      text-align: center;
-      border-bottom: 3px solid var(--teal);
+      gap: 8px;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 0.98rem;
+      padding: 14px 26px;
+      border-radius: 999px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
     }
+    .btn--primary { background: var(--pink-dark); color: var(--white); box-shadow: 0 10px 24px -12px rgba(232, 25, 110, 0.65); }
+    .btn--primary:hover { background: var(--pink-darker); transform: translateY(-2px); }
+    .btn--ghost { background: transparent; color: var(--teal-dark); border-color: var(--teal); }
+    .btn--ghost:hover { background: var(--teal-tint); transform: translateY(-2px); }
 
-    .hero img {
-      max-width: 320px;
-      width: 100%;
-      margin-bottom: 28px;
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+
+    /* ── Header ── */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(249, 249, 249, 0.82);
+      backdrop-filter: saturate(160%) blur(10px);
+      border-bottom: 1px solid var(--line);
     }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand-mark { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.18rem; }
+    .brand-mark img { width: 38px; height: 38px; object-fit: contain; }
+    .brand-mark span { color: var(--pink); }
+    .nav-links { display: flex; align-items: center; gap: 30px; }
+    .nav-links a { font-weight: 500; font-size: 0.96rem; color: var(--ink-soft); transition: color 0.18s ease; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links .btn { padding: 10px 20px; font-size: 0.9rem; }
+    .nav-toggle { display: none; }
 
+    /* ── Hero ── */
+    .hero { padding: clamp(48px, 8vw, 96px) 0 clamp(56px, 8vw, 104px); }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(32px, 5vw, 72px);
+      align-items: center;
+    }
     .hero h1 {
-      font-size: 2.4rem;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
       font-weight: 800;
-      letter-spacing: 0.04em;
-      color: var(--teal);
-      text-transform: uppercase;
+      margin: 18px 0 0;
     }
-
-    .hero h1 span {
-      color: var(--pink);
+    .hero h1 em { font-style: normal; color: var(--pink); }
+    .hero-sub {
+      margin-top: 22px;
+      font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+      color: var(--ink-soft);
+      max-width: 30ch;
     }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+    .hero-note { margin-top: 22px; font-size: 0.9rem; color: var(--ink-soft); }
+    .hero-note strong { color: var(--teal-dark); font-weight: 600; }
 
-    .hero .tagline {
-      margin-top: 14px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+    /* ── Signature: the notebook ── */
+    .notebook-stage { display: flex; justify-content: center; perspective: 1200px; }
+    .notebook {
+      position: relative;
+      width: min(420px, 100%);
+      aspect-ratio: 4 / 5;
+      background: var(--white);
+      border-radius: 6px 16px 16px 6px;
+      box-shadow: var(--shadow);
+      transform: rotate(-3deg);
+      transition: transform 0.4s ease;
+      padding: 30px 32px 30px 56px;
+      border: 1px solid var(--line);
+      overflow: hidden;
     }
-
-    .hero .cta {
-      margin-top: 32px;
-      display: inline-block;
-      background: var(--pink);
-      color: var(--white);
-      text-decoration: none;
-      padding: 14px 36px;
-      border-radius: 4px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: background 0.2s;
-    }
-
-    .hero .cta:hover { background: #c0134e; }
-
-    /* ── ABOUT ── */
-    .about {
-      background: var(--card-bg);
-      padding: 72px 24px;
-      text-align: center;
-    }
-
-    .about .inner {
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    .about h2 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 20px;
-      letter-spacing: 0.05em;
-    }
-
-    .about h2 span { color: var(--pink); }
-
-    .about p {
-      font-size: 1.05rem;
-      line-height: 1.8;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    .about .divider {
-      width: 56px;
-      height: 4px;
-      background: var(--pink);
-      border: none;
-      border-radius: 2px;
-      margin: 0 auto 28px;
-    }
-
-    .about .btn-contact {
-      display: inline-block;
-      margin-top: 28px;
-      background: transparent;
-      color: var(--pink);
-      text-decoration: none;
-      padding: 12px 32px;
-      border-radius: 4px;
-      border: 2px solid var(--pink);
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .about .btn-contact:hover {
-      background: var(--pink);
-      color: var(--white);
-    }
-
-    /* ── FOOTER ── */
-    footer {
+    .notebook:hover { transform: rotate(0deg); }
+    /* spiral spine */
+    .notebook::before {
+      content: "";
+      position: absolute; top: 0; bottom: 0; left: 0;
+      width: 30px;
       background: var(--teal);
-      color: var(--white);
-      padding: 40px 24px;
-      text-align: center;
+    }
+    .notebook__rings { position: absolute; left: 8px; top: 26px; bottom: 26px; width: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+    .notebook__rings i { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid rgba(0,0,0,0.12); }
+    /* ruled paper */
+    .notebook__paper {
+      position: relative; height: 100%;
+      background-image: repeating-linear-gradient(var(--white) 0 33px, var(--teal-tint) 33px 34px);
+      background-position: 0 14px;
+    }
+    .notebook__paper::before {
+      content: ""; position: absolute; top: -30px; bottom: -30px; left: 6px; width: 2px; background: rgba(232, 25, 110, 0.35);
+    }
+    .notebook__tag {
+      font-family: var(--body); font-weight: 600; font-size: 0.66rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--teal-dark); padding-left: 22px;
+    }
+    .notebook__belongs { position: absolute; left: 22px; right: 0; top: 50%; transform: translateY(-50%); }
+    .notebook__label { display: block; font-size: 0.95rem; color: var(--ink-soft); }
+    .notebook__name {
+      display: inline-block;
+      font-family: var(--hand);
+      font-weight: 700;
+      font-size: 2.5rem;
+      line-height: 1.1;
+      color: var(--pink);
+      border-bottom: 2px solid var(--ink);
+      min-width: 6ch;
+      padding: 0 6px 2px;
+      min-height: 1.2em;
+    }
+    .notebook__name .caret { color: var(--teal-dark); font-weight: 600; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Section scaffolding ── */
+    .section { padding: clamp(56px, 8vw, 96px) 0; }
+    .section--tint { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .section-head { max-width: 60ch; }
+    .section-head h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 700; margin-top: 12px; }
+    .section-head p { margin-top: 14px; color: var(--ink-soft); font-size: 1.06rem; }
+
+    /* ── Products ── */
+    .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
+    .product {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 30px 28px 32px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .section--tint .product { background: var(--white); }
+    .product:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; }
+    .product__icon {
+      width: 52px; height: 52px; border-radius: 12px;
+      background: var(--teal-tint); color: var(--teal-dark);
+      display: grid; place-items: center; margin-bottom: 20px;
+    }
+    .product__icon svg { width: 26px; height: 26px; }
+    .product h3 { font-size: 1.35rem; font-weight: 700; }
+    .product p { margin-top: 10px; color: var(--ink-soft); font-size: 0.98rem; }
+    .product__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; font-weight: 600; color: var(--pink); font-family: var(--body); }
+    .product__link svg { width: 16px; height: 16px; transition: transform 0.18s ease; }
+    .product:hover .product__link svg { transform: translateX(4px); }
+
+    /* ── How it works (real sequence) ── */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+    .step { position: relative; padding-top: 26px; border-top: 2px solid var(--line); }
+    .step__num { font-family: var(--display); font-weight: 800; font-size: 1.1rem; color: var(--pink); letter-spacing: 0.04em; }
+    .step h3 { font-size: 1.3rem; font-weight: 700; margin-top: 10px; }
+    .step p { margin-top: 8px; color: var(--ink-soft); font-size: 0.98rem; }
+
+    /* ── About strip ── */
+    .about-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+    .about-card {
+      background: var(--teal-deep); color: var(--white);
+      border-radius: var(--radius); padding: 40px;
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(1.5rem, 2.6vw, 2rem); line-height: 1.2;
+    }
+    .about-card .pin { display: block; font-family: var(--body); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.85; margin-bottom: 16px; }
+    .about-copy p { color: var(--ink-soft); font-size: 1.06rem; }
+    .about-copy p + p { margin-top: 16px; }
+    .about-copy strong { color: var(--ink); font-weight: 600; }
+
+    /* ── CTA band ── */
+    .cta-band { text-align: center; }
+    .cta-band h2 { font-size: clamp(1.9rem, 3.6vw, 2.8rem); font-weight: 800; }
+    .cta-band h2 em { font-style: normal; color: var(--pink); }
+    .cta-band p { margin: 14px auto 0; max-width: 46ch; color: var(--ink-soft); font-size: 1.06rem; }
+    .cta-band .hero-cta { justify-content: center; }
+
+    /* ── Footer ── */
+    .site-footer { background: var(--ink); color: rgba(255,255,255,0.72); padding: 64px 0 32px; }
+    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; }
+    .footer-brand .brand-mark { color: var(--white); }
+    .footer-brand .brand-mark span { color: var(--pink); }
+    .footer-brand p { margin-top: 16px; font-size: 0.95rem; max-width: 32ch; }
+    .footer-col h4 { font-family: var(--body); font-weight: 600; color: var(--white); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col a { display: block; padding: 5px 0; font-size: 0.95rem; transition: color 0.18s ease; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 0.85rem; }
+
+    /* ── Reveal animation ── */
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.is-visible { opacity: 1; transform: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 860px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: inline-flex; padding: 11px 20px; font-size: 0.92rem; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .notebook-stage { order: -1; margin-bottom: 8px; }
+      .notebook { transform: rotate(0deg); }
+      .hero-sub { max-width: none; }
+      .products, .steps { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      .brand-mark { font-size: 1.04rem; gap: 9px; }
+      .brand-mark img { width: 32px; height: 32px; }
+      .nav-toggle { padding: 10px 16px; font-size: 0.88rem; }
+      .wrap { padding: 0 18px; }
     }
 
-    footer .brand-name {
-      font-size: 1.2rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    footer .brand-name span { color: var(--pink); }
-
-    footer .links {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    footer .links a {
-      color: rgba(255,255,255,0.85);
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: color 0.2s;
-    }
-
-    footer .links a:hover { color: var(--white); }
-
-    footer .copy {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.55);
-      margin-top: 8px;
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+      .reveal { opacity: 1; transform: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- HERO -->
-  <section class="hero">
-    <img src="brand_assets/Noted-Haven-Logo.png" alt="Noted-Haven-Logo" />
-    <h1>Noted <span>Haven</span></h1>
-    <p class="tagline">Your Personalized Art &amp; Craft</p>
-    <a class="cta" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">
-      Shop Now
-    </a>
-  </section>
-
-  <!-- ABOUT -->
-  <section class="about">
-    <div class="inner">
-      <h2>About <span>Us</span></h2>
-      <hr class="divider" />
-      <p>
-        Noted Haven is a Filipino art and craft shop dedicated to creating
-        personalized, handcrafted goods that celebrate your unique story.
-        From custom journals and planners to one-of-a-kind art pieces, every
-        item is made with care and intention.
-      </p>
-      <p>
-        Whether you're looking for a heartfelt gift or something special just
-        for yourself, Noted Haven brings creativity and personality into every
-        piece — because the details matter.
-      </p>
-      <a class="btn-contact" href="mailto:notedhaven@gmail.com">Get in Touch</a>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand-mark" href="#top" aria-label="Noted Haven home">
+        <img src="brand_assets/Noted-Haven-Logo.png" alt="" />
+        Noted <span>Haven</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#products">Products</a>
+        <a href="#how">How it works</a>
+        <a href="#about">About</a>
+        <a class="btn btn--primary" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Order now</a>
+      </nav>
+      <a class="btn btn--primary nav-toggle" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Order now</a>
     </div>
-  </section>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Custom-printed stationery · Made in the Philippines</span>
+          <h1>Where every notebook tells <em>your</em> story</h1>
+          <p class="hero-sub">Personalized notebooks, notepads, and bookmarks — designed by you, printed by us, and made to feel unmistakably yours.</p>
+          <div class="hero-cta">
+            <a class="btn btn--primary" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Start customizing</a>
+            <a class="btn btn--ghost" href="#products">See the collection</a>
+          </div>
+          <p class="hero-note">Free design preview before you pay · <strong>Ships nationwide</strong></p>
+        </div>
+
+        <div class="notebook-stage">
+          <div class="notebook" aria-hidden="true">
+            <span class="notebook__rings"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <div class="notebook__paper">
+              <span class="notebook__tag">Noted Haven · Custom Edition</span>
+              <div class="notebook__belongs">
+                <span class="notebook__label">This notebook belongs to</span>
+                <span class="notebook__name" id="belongs-name">Maria S.<span class="caret">|</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="section section--tint" id="products">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The collection</span>
+          <h2>Three ways to make it yours</h2>
+          <p>Pick a piece, choose your paper, and add the details that make it personal — a name, a date, a logo, or a line you love.</p>
+        </div>
+        <div class="products">
+          <article class="product reveal">
+            <div class="product__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2Z"/><path d="M9 7h6M9 11h6"/></svg>
+            </div>
+            <h3>Notebooks</h3>
+            <p>Lined, dotted, or blank pages bound in a cover you design. Add a name, a date, or a quote that means something.</p>
+            <a class="product__link" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Customize a notebook
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </article>
+
+          <article class="product reveal">
+            <div class="product__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+            </div>
+            <h3>Notepads</h3>
+            <p>Tear-off pads for to-do lists, meeting notes, and grocery runs — topped with your name, team, or logo.</p>
+            <a class="product__link" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Customize a notepad
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </article>
+
+          <article class="product reveal">
+            <div class="product__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18l-5-4-5 4Z"/></svg>
+            </div>
+            <h3>Bookmarks</h3>
+            <p>Sturdy, printed keepsakes that hold your page and your style. Lovely as gifts or as a little treat for yourself.</p>
+            <a class="product__link" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Customize a bookmark
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">How it works</span>
+          <h2>From your idea to your doorstep</h2>
+          <p>Three steps, no design skills required. We'll show you a preview before anything goes to print.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <span class="step__num">01</span>
+            <h3>Choose your piece</h3>
+            <p>Pick a notebook, notepad, or bookmark, then choose your paper, size, and binding.</p>
+          </div>
+          <div class="step reveal">
+            <span class="step__num">02</span>
+            <h3>Make it yours</h3>
+            <p>Send us a name, photo, or design. Preview it, tweak it, and get it looking just right.</p>
+          </div>
+          <div class="step reveal">
+            <span class="step__num">03</span>
+            <h3>We print &amp; deliver</h3>
+            <p>We print with care and ship it to you anywhere in the Philippines.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section section--tint" id="about">
+      <div class="wrap about-grid">
+        <div class="about-card reveal">
+          <span class="pin">Crafted in Sto. Tomas, Batangas</span>
+          “The things you write in should feel as personal as what you write.”
+        </div>
+        <div class="about-copy reveal">
+          <p>Noted Haven started with a simple idea: stationery shouldn't be one-size-fits-all. So we let you shape every piece — the cover, the pages, the name on the front.</p>
+          <p><strong>Every order is printed to your specs</strong>, which means no two are ever quite the same. Whether it's a gift for someone special or a treat for your own desk, it leaves our shop made just for you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <section class="section cta-band">
+      <div class="wrap reveal">
+        <h2>Ready to make it <em>yours?</em></h2>
+        <p>Message us with your idea and we'll send back a free design preview — no commitment until you love it.</p>
+        <div class="hero-cta">
+          <a class="btn btn--primary" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Start customizing</a>
+          <a class="btn btn--ghost" href="mailto:notedhaven@gmail.com">Email us</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <!-- FOOTER -->
-  <footer>
-    <div class="brand-name">Noted <span>Haven</span></div>
-    <div class="links">
-      <a href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">
-        Facebook
-      </a>
-      <a href="mailto:notedhaven@gmail.com">
-        Email Us
-      </a>
-      <a href="#">Sto. Tomas Batangas, Philippines 4234</a>
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-mark">Noted <span>Haven</span></span>
+          <p>Personalized stationery printed just for you, from our shop in Sto. Tomas, Batangas.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="#products">Notebooks</a>
+          <a href="#products">Notepads</a>
+          <a href="#products">Bookmarks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#about">About</a>
+          <a href="#how">How it works</a>
+          <a href="mailto:notedhaven@gmail.com">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Facebook</a>
+          <a href="mailto:notedhaven@gmail.com">notedhaven@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Noted Haven. All rights reserved.</span>
+        <span>Sto. Tomas, Batangas, Philippines 4234</span>
+      </div>
     </div>
-    <p class="copy">&copy; 2026 Noted Haven. All rights reserved.</p>
   </footer>
+
+  <script>
+    // Signature: hand-fill the "belongs to" line, cycling real audiences.
+    (function () {
+      var el = document.getElementById('belongs-name');
+      if (!el) return;
+      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var names = ['Maria S.', 'the study group', 'Q3 planning', 'your big ideas', 'Room 204'];
+      if (reduce) { el.textContent = names[0]; return; }
+
+      var caret = '<span class="caret">|</span>';
+      var i = 0;
+
+      function type(word, cb) {
+        var n = 0;
+        (function step() {
+          el.innerHTML = word.slice(0, n) + caret;
+          if (n++ <= word.length) { setTimeout(step, 90); } else { setTimeout(cb, 1600); }
+        })();
+      }
+      function erase(word, cb) {
+        var n = word.length;
+        (function step() {
+          el.innerHTML = word.slice(0, n) + caret;
+          if (n-- >= 0) { setTimeout(step, 45); } else { setTimeout(cb, 350); }
+        })();
+      }
+      function loop() {
+        var word = names[i % names.length];
+        type(word, function () { erase(word, function () { i++; loop(); }); });
+      }
+      loop();
+    })();
+
+    // Scroll reveals
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
 
 </body>
 </html>
