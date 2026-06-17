@@ -102,17 +102,56 @@
     .nav-toggle { display: none; }
 
     /* ── Hero ── */
-    .hero { position: relative; padding: clamp(48px, 8vw, 96px) 0 clamp(64px, 8vw, 112px); }
+    .hero { position: relative; background: var(--paper); padding: clamp(48px, 8vw, 96px) 0 clamp(64px, 8vw, 112px); }
+    /* dot grid — paints over the aurora so the texture reads on top of the glow */
     .hero-bg {
       position: absolute; inset: 0; z-index: 0; pointer-events: none;
-      background-color: var(--paper);
-      background-image:
-        radial-gradient(circle at 16% 18%, rgba(232, 25, 110, 0.07), transparent 42%),
-        radial-gradient(circle at 88% 28%, rgba(29, 189, 189, 0.09), transparent 40%),
-        radial-gradient(rgba(29, 189, 189, 0.10) 1.1px, transparent 1.3px);
-      background-size: auto, auto, 24px 24px;
+      background-image: radial-gradient(rgba(29, 189, 189, 0.10) 1.1px, transparent 1.3px);
+      background-size: 24px 24px;
       -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
               mask-image: linear-gradient(180deg, #000 70%, transparent);
+    }
+
+    /* ── Aurora: soft drifting brand-colored glows behind the hero ── */
+    .aurora {
+      position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+      -webkit-mask-image: linear-gradient(180deg, #000 66%, transparent);
+              mask-image: linear-gradient(180deg, #000 66%, transparent);
+    }
+    .aurora__blob {
+      position: absolute;
+      width: clamp(280px, 44vw, 580px); height: clamp(280px, 44vw, 580px);
+      border-radius: 50%;
+      filter: blur(72px);
+      opacity: 0.5;
+      will-change: transform, opacity;
+    }
+    .aurora__blob--pink {
+      top: -14%; left: -10%;
+      background: radial-gradient(circle, rgba(232, 25, 110, 0.42), rgba(232, 25, 110, 0) 68%);
+      animation: aurora-pink 26s ease-in-out infinite;
+    }
+    .aurora__blob--teal {
+      top: -8%; right: -12%;
+      background: radial-gradient(circle, rgba(29, 189, 189, 0.46), rgba(29, 189, 189, 0) 68%);
+      animation: aurora-teal 31s ease-in-out infinite;
+    }
+    .aurora__blob--mix {
+      bottom: -22%; left: 36%;
+      background: radial-gradient(circle, rgba(232, 25, 110, 0.28), rgba(29, 189, 189, 0.26) 55%, rgba(29, 189, 189, 0) 72%);
+      animation: aurora-mix 36s ease-in-out infinite;
+    }
+    @keyframes aurora-pink {
+      0%, 100% { transform: translate(0, 0) scale(1);    opacity: 0.46; }
+      50%      { transform: translate(13%, 9%) scale(1.12); opacity: 0.6; }
+    }
+    @keyframes aurora-teal {
+      0%, 100% { transform: translate(0, 0) scale(1.05); opacity: 0.52; }
+      50%      { transform: translate(-11%, 7%) scale(1); opacity: 0.4; }
+    }
+    @keyframes aurora-mix {
+      0%, 100% { transform: translate(0, 0) scale(1);     opacity: 0.36; }
+      50%      { transform: translate(-9%, -13%) scale(1.16); opacity: 0.52; }
     }
     .hero-grid {
       position: relative; z-index: 1;
@@ -365,6 +404,11 @@
 
     <!-- HERO -->
     <section class="hero">
+      <div class="aurora" aria-hidden="true">
+        <span class="aurora__blob aurora__blob--pink"></span>
+        <span class="aurora__blob aurora__blob--teal"></span>
+        <span class="aurora__blob aurora__blob--mix"></span>
+      </div>
       <div class="hero-bg" aria-hidden="true"></div>
       <div class="wrap hero-grid">
         <div class="notebook-stage">
