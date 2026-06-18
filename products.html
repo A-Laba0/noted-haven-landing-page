@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Noted Haven — Products</title>
+  <meta name="description" content="A closer look at Noted Haven's custom notebooks, notepads, and bookmarks — materials, sizes, and the personal details that make each one yours." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:     #F9F9F9;
+      --white:     #FFFFFF;
+      --base:      #0E1F1E;   /* page background — deeper than ink */
+      --surface:   #16302F;   /* brand ink — card surfaces */
+      --surface-2: #1B3938;   /* raised cells */
+      --ink:       #16302F;
+      --pink:      #E8196E;
+      --pink-dark: #C9135C;
+      --teal:      #1DBDBD;
+      --foil:      #E8C77E;   /* gold foil — used only on the foil detail */
+      --line:      rgba(255, 255, 255, 0.10);
+      --muted:     rgba(255, 255, 255, 0.64);
+
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --body:    'Hanken Grotesk', system-ui, sans-serif;
+      --hand:    'Caveat', 'Segoe Script', cursive;
+
+      --maxw: 1140px;
+      --radius: 16px;
+    }
+
+    html { scroll-behavior: smooth; overflow-x: clip; }
+
+    body {
+      font-family: var(--body);
+      color: rgba(255, 255, 255, 0.74);
+      background: var(--base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--display); line-height: 1.08; letter-spacing: -0.02em; color: var(--white); }
+    a { color: inherit; text-decoration: none; }
+
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    .eyebrow {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    /* ── Hero: full-screen video background ── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 96px 24px;
+    }
+
+    .hero__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+
+    /* dark, brand-tinted gradient so the bright footage stays readable */
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(22, 48, 47, 0.45) 0%, rgba(14, 31, 30, 0.82) 100%),
+        radial-gradient(120% 90% at 50% 50%, rgba(22, 48, 47, 0) 35%, rgba(22, 48, 47, 0.45) 100%);
+    }
+
+    .hero__back {
+      position: absolute;
+      top: clamp(20px, 4vw, 36px);
+      left: clamp(20px, 4vw, 36px);
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.88);
+      transition: color 0.18s ease, transform 0.18s ease;
+    }
+    .hero__back:hover { color: var(--white); transform: translateX(-3px); }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 22ch;
+      color: var(--white);
+    }
+    .hero__content h1 {
+      font-size: clamp(2.8rem, 8vw, 5.2rem);
+      font-weight: 800;
+      text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
+    }
+    .hero__content h1 span { color: var(--pink); }
+    .hero__tagline {
+      margin: 20px auto 0;
+      max-width: 30ch;
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 1px 16px rgba(0, 0, 0, 0.35);
+    }
+    .hero__scroll {
+      position: absolute;
+      bottom: clamp(22px, 4vw, 38px); left: 50%;
+      z-index: 2; transform: translateX(-50%);
+      display: inline-flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .hero__scroll span {
+      width: 1px; height: 34px;
+      background: linear-gradient(rgba(255,255,255,0.7), transparent);
+      animation: scroll-pulse 2.4s ease-in-out infinite;
+    }
+
+    /* hero load-in */
+    @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    @keyframes scroll-pulse { 0%, 100% { transform: scaleY(0.4); opacity: 0.4; } 50% { transform: scaleY(1); opacity: 1; } }
+    .hero__back     { animation: rise 0.8s 0.1s both ease-out; }
+    .hero__content h1   { animation: rise 0.9s 0.3s both ease-out; }
+    .hero__tagline  { animation: rise 0.9s 0.55s both ease-out; }
+    .hero__scroll   { animation: rise 0.9s 0.9s both ease-out; }
+
+    /* ── Section scaffolding ── */
+    .section { position: relative; padding: clamp(72px, 9vw, 120px) 0; }
+    .section-head { max-width: 60ch; }
+    .section-head h2 { font-size: clamp(2rem, 4.4vw, 3.2rem); font-weight: 800; margin-top: 14px; }
+    .section-head .lead { margin-top: 16px; color: var(--muted); font-size: clamp(1.02rem, 1.5vw, 1.18rem); max-width: 56ch; }
+
+    /* ── Product details (catalogue) ── */
+    .details {
+      background:
+        radial-gradient(70% 50% at 12% 0%, rgba(232, 25, 110, 0.12), transparent 60%),
+        radial-gradient(60% 50% at 92% 6%, rgba(29, 189, 189, 0.12), transparent 60%);
+    }
+    .catalogue { display: grid; gap: clamp(20px, 3vw, 32px); margin-top: clamp(40px, 5vw, 64px); }
+
+    .entry {
+      position: relative;
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: clamp(28px, 4vw, 56px);
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: clamp(28px, 4vw, 52px);
+      overflow: hidden;
+    }
+    .entry::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; background: var(--accent);
+    }
+    .entry__kicker { color: var(--accent); }
+    .entry__title { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-top: 12px; }
+    .entry__lead { margin-top: 16px; color: var(--muted); font-size: 1.05rem; }
+    .entry__for { margin-top: 22px; font-size: 0.98rem; color: rgba(255, 255, 255, 0.82); }
+    .entry__for span {
+      display: block; margin-bottom: 5px;
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 600; color: var(--accent);
+    }
+
+    .entry__specs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .spec {
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .spec--wide { grid-column: 1 / -1; }
+    .spec__label {
+      display: block; margin-bottom: 9px;
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 600; color: var(--muted);
+    }
+    .spec p { color: rgba(255, 255, 255, 0.9); font-size: 0.96rem; line-height: 1.5; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip {
+      font-size: 0.86rem; padding: 6px 13px; border-radius: 999px;
+      border: 1px solid var(--line); background: rgba(255, 255, 255, 0.04);
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .chip--name { font-family: var(--hand); font-size: 1.2rem; line-height: 1; padding: 6px 14px; color: var(--pink); }
+    .chip--teal { color: var(--teal); border-color: rgba(29, 189, 189, 0.4); }
+
+    /* ── Video callouts: timecoded "frames" pulled from the film ── */
+    .frames {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+      margin-top: clamp(40px, 5vw, 60px);
+    }
+    .frame {
+      display: flex; flex-direction: column;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .frame__swatch { position: relative; height: 138px; }
+    .frame__body { padding: 20px 22px 24px; }
+    .frame__time {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 600; color: var(--accent);
+    }
+    .frame__time::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .frame h4 { font-size: 1.14rem; margin-top: 12px; }
+    .frame p { margin-top: 9px; color: var(--muted); font-size: 0.93rem; line-height: 1.55; }
+
+    /* material swatches — tiny CSS quotes of the footage */
+    .swatch--foil {
+      background: linear-gradient(115deg, #7a5a16 0%, #d9b15a 26%, #f7e6ad 46%, #d9b15a 62%, #8a6a1e 100%);
+      background-size: 220% 100%;
+      animation: foil-sheen 7s linear infinite;
+    }
+    .swatch--foil::after {
+      content: "M"; position: absolute; inset: 0; display: grid; place-items: center;
+      font-family: var(--display); font-weight: 800; font-size: 3.6rem; color: rgba(60, 42, 6, 0.5);
+    }
+    @keyframes foil-sheen { 0% { background-position: 0% 50%; } 100% { background-position: 220% 50%; } }
+
+    .swatch--ribbon { background: var(--surface-2); }
+    .swatch--ribbon::before {
+      content: ""; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 42px; height: 96px; background: var(--teal);
+      border-radius: 0 0 3px 3px;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+      box-shadow: 0 10px 24px -10px rgba(29, 189, 189, 0.7);
+    }
+
+    .swatch--lined {
+      background-color: #f3f6f3;
+      background-image: repeating-linear-gradient(#f3f6f3 0 21px, rgba(29, 189, 189, 0.32) 21px 22px);
+      background-position: 0 12px;
+    }
+    .swatch--lined::before {
+      content: ""; position: absolute; top: 0; bottom: 0; left: 26px; width: 2px;
+      background: rgba(232, 25, 110, 0.45);
+    }
+
+    .swatch--linen {
+      background-color: #173433;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 6px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 6px),
+        linear-gradient(135deg, rgba(232, 25, 110, 0.16), rgba(29, 189, 189, 0.12));
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--body); font-weight: 600; font-size: 1.02rem;
+      padding: 16px 32px; border-radius: 999px; border: 2px solid transparent;
+      cursor: pointer; transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    .btn--primary { background: var(--pink); color: var(--white); box-shadow: 0 16px 44px -16px rgba(232, 25, 110, 0.75); }
+    .btn--primary:hover { background: var(--pink-dark); transform: translateY(-2px); box-shadow: 0 20px 50px -16px rgba(232, 25, 110, 0.85); }
+    .btn svg { width: 18px; height: 18px; transition: transform 0.18s ease; }
+    .btn--primary:hover svg { transform: translateX(4px); }
+
+    /* ── CTA ── */
+    .cta {
+      text-align: center;
+      background: radial-gradient(60% 90% at 50% 50%, rgba(232, 25, 110, 0.14), transparent 70%);
+    }
+    .cta h2 { font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800; }
+    .cta h2 em { font-style: normal; color: var(--pink); }
+    .cta p { margin: 16px auto 0; max-width: 48ch; color: var(--muted); font-size: 1.08rem; }
+    .cta .btn { margin-top: 32px; }
+    .cta__note { margin-top: 18px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.5); }
+
+    /* ── Footer ── */
+    .site-footer { background: #0A1716; border-top: 1px solid var(--line); padding: 64px 0 32px; color: rgba(255, 255, 255, 0.6); }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px; }
+    .brand-mark { display: inline-flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 800; font-size: 1.18rem; color: var(--white); }
+    .brand-mark img { width: 38px; height: 38px; object-fit: contain; }
+    .brand-mark span { color: var(--pink); }
+    .footer-brand p { margin-top: 16px; font-size: 0.95rem; max-width: 32ch; }
+    .footer-col h4 { font-family: var(--body); font-weight: 600; color: var(--white); font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-col a { display: block; padding: 5px 0; font-size: 0.95rem; transition: color 0.18s ease; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--line); font-size: 0.85rem; }
+
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.is-visible { opacity: 1; transform: none; }
+
+    /* ── Responsive ── */
+    @media (max-width: 920px) {
+      .frames { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 760px) {
+      .entry { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px) {
+      .wrap { padding: 0 18px; }
+      .entry__specs { grid-template-columns: 1fr; }
+      .frames { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+      .reveal { opacity: 1; transform: none; }
+      .hero__back, .hero__content h1, .hero__tagline, .hero__scroll { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <video class="hero__video" autoplay muted loop playsinline poster="" aria-hidden="true">
+      <source src="hero.mp4" type="video/mp4" />
+    </video>
+    <div class="hero__overlay" aria-hidden="true"></div>
+
+    <a class="hero__back" href="index.html">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      Back to home
+    </a>
+
+    <div class="hero__content">
+      <h1>Noted <span>Haven</span></h1>
+      <p class="hero__tagline">Every piece, made personal — down to the last detail.</p>
+    </div>
+
+    <span class="hero__scroll" aria-hidden="true">Scroll<span></span></span>
+  </section>
+
+  <main>
+
+    <!-- PRODUCT DETAILS -->
+    <section class="section details" id="details">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">The catalogue</span>
+          <h2>A closer look at every piece</h2>
+          <p class="lead">Three formats, all built to order. Choose the paper, the size, and the details that turn a notebook, a pad, or a bookmark into something unmistakably yours.</p>
+        </div>
+
+        <div class="catalogue">
+
+          <!-- Notebooks -->
+          <article class="entry reveal" style="--accent: var(--teal);">
+            <div class="entry__main">
+              <span class="eyebrow entry__kicker">Notebooks</span>
+              <h3 class="entry__title">The one you actually carry</h3>
+              <p class="entry__lead">Bound, covered, and printed to your spec — a notebook that feels like yours from the first page, not a generic one with a sticker on the front.</p>
+              <p class="entry__for"><span>Made for</span> Students keeping a book per subject, professionals in back-to-back meetings, and gifts that get used every day.</p>
+            </div>
+            <div class="entry__specs">
+              <div class="spec">
+                <span class="spec__label">Materials</span>
+                <p>Linen-textured or smooth matte cover over 80–100gsm pages, twin-ring or perfect-bound.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Sizes</span>
+                <p>A6 pocket · A5 everyday · B5 desk.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Pages</span>
+                <p>Lined, dotted, grid, or blank — mix them within one book if you like.</p>
+              </div>
+              <div class="spec spec--wide">
+                <span class="spec__label">Personalize</span>
+                <div class="chips">
+                  <span class="chip chip--name">Maria S.</span>
+                  <span class="chip">Class of 2026</span>
+                  <span class="chip chip--teal">Your logo</span>
+                  <span class="chip">“Stay curious”</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Notepads -->
+          <article class="entry reveal" style="--accent: var(--pink);">
+            <div class="entry__main">
+              <span class="eyebrow entry__kicker">Notepads</span>
+              <h3 class="entry__title">Tear-off pads for a busy week</h3>
+              <p class="entry__lead">For the lists that run your days — to-dos, meeting notes, grocery runs. Tear off the top sheet and the next one's already waiting, headed exactly how you want it.</p>
+              <p class="entry__for"><span>Made for</span> Teams sharing one look, planners who think on paper, and desks that run on lists.</p>
+            </div>
+            <div class="entry__specs">
+              <div class="spec">
+                <span class="spec__label">Materials</span>
+                <p>70–80gsm tear-off sheets glued to a sturdy chipboard back.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Sizes</span>
+                <p>A6 memo · A5 list · slim DL for a long column.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Sheets</span>
+                <p>Ruled, checklist, or blank — 50 or 100 sheets per pad.</p>
+              </div>
+              <div class="spec spec--wide">
+                <span class="spec__label">Personalize</span>
+                <div class="chips">
+                  <span class="chip chip--name">Alex's list</span>
+                  <span class="chip">Team or department</span>
+                  <span class="chip chip--teal">Your logo</span>
+                  <span class="chip">A header line</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Bookmarks -->
+          <article class="entry reveal" style="--accent: var(--teal);">
+            <div class="entry__main">
+              <span class="eyebrow entry__kicker">Bookmarks</span>
+              <h3 class="entry__title">Small keepsakes that hold your page</h3>
+              <p class="entry__lead">Sturdy, printed, and finished by hand — lovely enough to gift, useful enough to keep. The little detail that makes a book feel looked-after.</p>
+              <p class="entry__for"><span>Made for</span> Readers, gift sets, and a small thank-you to slip into every order.</p>
+            </div>
+            <div class="entry__specs">
+              <div class="spec">
+                <span class="spec__label">Materials</span>
+                <p>300gsm coated card with matte, gloss, or soft-touch finish — gold foil optional.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Sizes</span>
+                <p>5 × 15 cm classic · 4 × 18 cm slim.</p>
+              </div>
+              <div class="spec">
+                <span class="spec__label">Finish</span>
+                <p>Add a satin ribbon or tassel; round or square corners.</p>
+              </div>
+              <div class="spec spec--wide">
+                <span class="spec__label">Personalize</span>
+                <div class="chips">
+                  <span class="chip chip--name">M</span>
+                  <span class="chip">A short quote</span>
+                  <span class="chip chip--teal">A tiny illustration</span>
+                  <span class="chip">A name</span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- VIDEO CALLOUTS -->
+    <section class="section" id="details-film">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="eyebrow">Seen in the film</span>
+          <h2>The details, up close</h2>
+          <p class="lead">Every frame above is a real Noted Haven order. Here's what you're looking at when the camera lingers.</p>
+        </div>
+
+        <div class="frames">
+          <article class="frame reveal" style="--accent: var(--foil);">
+            <div class="frame__swatch swatch--foil" aria-hidden="true"></div>
+            <div class="frame__body">
+              <span class="frame__time">00:01 · Gold foil</span>
+              <h4>The pressed monogram</h4>
+              <p>A single initial pressed in real gold foil. It catches the light — it doesn't just sit printed on top.</p>
+            </div>
+          </article>
+
+          <article class="frame reveal" style="--accent: var(--teal);">
+            <div class="frame__swatch swatch--ribbon" aria-hidden="true"></div>
+            <div class="frame__body">
+              <span class="frame__time">00:03 · Ribbon</span>
+              <h4>The satin finish</h4>
+              <p>A satin ribbon finishes each bookmark and keeps your place — no bent corners, no lost page.</p>
+            </div>
+          </article>
+
+          <article class="frame reveal" style="--accent: var(--pink);">
+            <div class="frame__swatch swatch--lined" aria-hidden="true"></div>
+            <div class="frame__body">
+              <span class="frame__time">00:05 · Inner pages</span>
+              <h4>Lines that hold ink</h4>
+              <p>Smooth 100gsm pages, ruled fine and even, so your writing stays crisp and never bleeds through.</p>
+            </div>
+          </article>
+
+          <article class="frame reveal" style="--accent: var(--teal);">
+            <div class="frame__swatch swatch--linen" aria-hidden="true"></div>
+            <div class="frame__body">
+              <span class="frame__time">00:07 · Cover</span>
+              <h4>A linen-weave cover</h4>
+              <p>A textured cover that holds its shape in a bag and feels like something you'll want to keep.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section cta">
+      <div class="wrap reveal">
+        <h2>Make the next one <em>yours</em></h2>
+        <p>Pick a piece, tell us the details, and we'll send back a free design preview before anything goes to print.</p>
+        <a class="btn btn--primary" href="index.html">
+          Start customizing
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <p class="cta__note">No commitment until you love it · Ships nationwide</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand-mark" href="index.html" aria-label="Noted Haven home">
+            <img src="brand_assets/Noted-Haven-Logo.png" alt="" />
+            Noted <span>Haven</span>
+          </a>
+          <p>Personalized stationery printed just for you, from our shop in Sto. Tomas, Batangas.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Shop</h4>
+          <a href="#details">Notebooks</a>
+          <a href="#details">Notepads</a>
+          <a href="#details">Bookmarks</a>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="index.html">Home</a>
+          <a href="index.html#about">About</a>
+          <a href="index.html#how">How it works</a>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <a href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Facebook</a>
+          <a href="mailto:notedhaven@gmail.com">notedhaven@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Noted Haven. All rights reserved.</span>
+        <span>Sto. Tomas, Batangas, Philippines 4234</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveals
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.15 });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>
