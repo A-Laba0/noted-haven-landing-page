@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>See it in motion — Noted Haven</title>
+  <meta name="description" content="Watch a Noted Haven notebook come to life — a blueprint filling in, line by line, into a finished custom-printed notebook." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:    #F9F9F9;
+      --ink:      #16302F;
+      --stage:    #0B1212;   /* deep, teal-tinted near-black for the dark room */
+      --stage-2:  #0E1A19;
+      --pink:     #E8196E;
+      --pink-dark:#C9135C;
+      --teal:     #1DBDBD;
+      --teal-dark:#15A0A0;
+      --mist:     rgba(255, 255, 255, 0.72);
+      --line:     rgba(255, 255, 255, 0.14);
+
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --body:    'Hanken Grotesk', system-ui, sans-serif;
+    }
+
+    html { overflow-x: clip; }
+    body {
+      font-family: var(--body);
+      background: var(--stage);
+      color: #fff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+    }
+    h1, h2 { font-family: var(--display); line-height: 1.06; letter-spacing: -0.02em; }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 6px; }
+
+    /* ── Minimal top bar so the page is never a dead-end ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px clamp(18px, 4vw, 40px);
+      pointer-events: none;
+    }
+    .topbar a { pointer-events: auto; }
+    .topbar__home {
+      display: inline-flex; align-items: center; gap: 9px;
+      font-family: var(--display); font-weight: 800; font-size: 1.05rem;
+      color: #fff; text-shadow: 0 2px 18px rgba(0,0,0,0.6);
+    }
+    .topbar__home span { color: var(--pink); }
+    .topbar__home svg { width: 17px; height: 17px; opacity: 0.8; }
+    .topbar__tag {
+      font-weight: 600; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--mist); text-shadow: 0 2px 18px rgba(0,0,0,0.6);
+    }
+    @media (max-width: 560px) { .topbar__tag { display: none; } }
+
+    /* ── The stage: full-screen scroll-scrubbed morph ── */
+    .stage { position: relative; background: var(--stage); }
+    .stage__track { height: 640vh; }           /* scroll distance that drives the scrub */
+    .stage.mode-video .stage__track,
+    .stage.mode-static .stage__track { height: 100svh; }
+
+    .stage__pin {
+      position: sticky; top: 0;
+      height: 100svh;
+      overflow: hidden;
+      display: grid; place-items: center;
+      background:
+        radial-gradient(120% 90% at 50% 42%, var(--stage-2), var(--stage) 70%);
+    }
+    /* depth: darken the edges so the lit panel reads as the focal point */
+    .stage__pin::after {
+      content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: radial-gradient(110% 80% at 50% 46%, transparent 52%, rgba(0,0,0,0.55));
+    }
+
+    .stage__canvas {
+      position: absolute; inset: 0; z-index: 1;
+      width: 100%; height: 100%; display: none;
+    }
+    .stage.mode-scrub .stage__canvas { display: block; }
+
+    .stage__video, .stage__static {
+      position: absolute; inset: 0; z-index: 1;
+      width: 100%; height: 100%; object-fit: contain; display: none;
+      padding: clamp(16px, 5vw, 60px);
+    }
+    .stage.mode-video  .stage__video  { display: block; }
+    .stage.mode-static .stage__static { display: block; }
+
+    /* ── Brand text overlays (driven by scroll progress) ── */
+    .stage__overlay {
+      position: absolute; z-index: 4; left: 0; right: 0;
+      text-align: center; padding: 0 24px; pointer-events: none;
+      opacity: 0; will-change: opacity, transform;
+    }
+    .stage__overlay--main { top: 50%; transform: translateY(-50%); }
+    .stage.mode-static .stage__overlay--main { opacity: 1; }
+
+    .overlay__eyebrow {
+      display: inline-block; font-weight: 600; font-size: 0.78rem;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal);
+      margin-bottom: 16px; text-shadow: 0 2px 20px rgba(0,0,0,0.7);
+    }
+    .overlay__title {
+      font-size: clamp(2.4rem, 7vw, 5rem); font-weight: 800; color: #fff;
+      text-shadow: 0 6px 40px rgba(0,0,0,0.55);
+    }
+    .overlay__title span { color: var(--pink); }
+    .overlay__sub {
+      margin: 18px auto 0; max-width: 30ch; font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--mist); text-shadow: 0 2px 24px rgba(0,0,0,0.7);
+    }
+    .stage__overlay--end { bottom: clamp(64px, 12vh, 120px); }
+    .overlay__caption {
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(1.3rem, 3.4vw, 2.1rem); color: #fff;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+    }
+    .overlay__caption span { color: var(--teal); }
+
+    /* ── Scroll hint ── */
+    .stage__hint {
+      position: absolute; z-index: 4; left: 50%; bottom: 30px; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-weight: 600; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--mist); transition: opacity 0.4s ease;
+    }
+    .stage__hint svg { width: 20px; height: 20px; color: var(--pink); animation: nudge 1.8s ease-in-out infinite; }
+    @keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+    .stage.mode-video .stage__hint, .stage.mode-static .stage__hint { display: none; }
+
+    /* ── Scrub progress bar ── */
+    .stage__progress {
+      position: absolute; z-index: 5; left: 0; bottom: 0; height: 3px; width: 100%;
+      transform: scaleX(0); transform-origin: left;
+      background: linear-gradient(90deg, var(--pink), var(--teal));
+    }
+    .stage.mode-video .stage__progress, .stage.mode-static .stage__progress { display: none; }
+
+    /* ── Loader ── */
+    .stage__loader {
+      position: absolute; z-index: 6; inset: 0; display: grid; place-items: center;
+      background: var(--stage); transition: opacity 0.5s ease;
+      font-weight: 600; font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mist);
+    }
+    .stage__loader.is-hidden { opacity: 0; pointer-events: none; }
+    .stage__loader b { color: var(--teal); font-variant-numeric: tabular-nums; }
+    .stage.mode-video .stage__loader, .stage.mode-static .stage__loader { display: none; }
+
+    /* ── Outro: a clear next step instead of a dead-end ── */
+    .outro {
+      position: relative; z-index: 2;
+      background: var(--stage);
+      border-top: 1px solid var(--line);
+      text-align: center;
+      padding: clamp(72px, 12vw, 140px) 24px;
+    }
+    .outro__eyebrow {
+      display: inline-block; font-weight: 600; font-size: 0.78rem;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px;
+    }
+    .outro h2 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; }
+    .outro h2 em { font-style: normal; color: var(--pink); }
+    .outro__sub { margin: 16px auto 0; max-width: 46ch; color: var(--mist); font-size: 1.06rem; }
+    .outro__cta { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 34px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--body); font-weight: 600; font-size: 0.98rem;
+      padding: 14px 28px; border-radius: 999px; border: 2px solid transparent;
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+    .btn--primary { background: var(--pink); color: #fff; box-shadow: 0 14px 30px -14px rgba(232,25,110,0.8); }
+    .btn--primary:hover { background: var(--pink-dark); transform: translateY(-2px); }
+    .btn--ghost { border-color: var(--teal); color: var(--teal); }
+    .btn--ghost:hover { background: rgba(29,189,189,0.12); transform: translateY(-2px); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .stage__hint svg { animation: none; }
+      .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="topbar__home" href="index.html" aria-label="Back to Noted Haven home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Noted <span>Haven</span>
+    </a>
+    <span class="topbar__tag">From blueprint to bookshelf</span>
+  </header>
+
+  <main>
+    <!-- SCROLL-SCRUBBED MORPH -->
+    <section class="stage mode-scrub" id="stage" aria-label="A Noted Haven notebook coming to life, from blueprint to finished product.">
+      <div class="stage__track" id="track">
+        <div class="stage__pin">
+          <canvas class="stage__canvas" id="frameCanvas" role="img"
+                  aria-label="Scroll to watch a blueprint line-drawing fill in and become a finished hot-pink spiral notebook."></canvas>
+
+          <!-- mobile fallback: just play the video -->
+          <video class="stage__video" id="morphVideo" src="notebook-morph.mp4"
+                 muted loop playsinline preload="metadata"
+                 aria-label="A blueprint notebook morphing into a finished hot-pink spiral notebook."></video>
+
+          <!-- reduced-motion fallback: the finished frame, held still -->
+          <img class="stage__static" src="images/end-finished.png" alt="A finished custom hot-pink spiral notebook with teal page-edge accents." />
+
+          <div class="stage__overlay stage__overlay--main" id="overlayMain">
+            <span class="overlay__eyebrow">Custom-printed · Made in the Philippines</span>
+            <h1 class="overlay__title">Noted <span>Haven</span></h1>
+            <p class="overlay__sub">Where every notebook tells your story.</p>
+          </div>
+
+          <div class="stage__overlay stage__overlay--end" id="overlayEnd">
+            <p class="overlay__caption">Printed to your specs — <span>unmistakably yours.</span></p>
+          </div>
+
+          <div class="stage__hint" id="hint">
+            Scroll to play
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>
+          </div>
+
+          <div class="stage__progress" id="progress"></div>
+
+          <div class="stage__loader" id="loader">Loading the reel… <b id="loaderPct">0%</b></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTRO -->
+    <section class="outro">
+      <span class="outro__eyebrow">Now make yours</span>
+      <h2>From a blueprint to a notebook that's <em>yours</em></h2>
+      <p class="outro__sub">Send us a name, a date, or a design, and we'll send back a free preview — no commitment until you love it.</p>
+      <div class="outro__cta">
+        <a class="btn btn--primary" href="https://www.facebook.com/NotedHaven" target="_blank" rel="noopener">Start customizing</a>
+        <a class="btn btn--ghost" href="index.html">Back to home</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var FRAME_COUNT = 61;
+      var framePath = function (i) {
+        return "frames/frame-" + String(i + 1).padStart(4, "0") + ".png";
+      };
+
+      var stage    = document.getElementById("stage");
+      var track    = document.getElementById("track");
+      var canvas   = document.getElementById("frameCanvas");
+      var ctx      = canvas.getContext("2d");
+      var video    = document.getElementById("morphVideo");
+      var overlayMain = document.getElementById("overlayMain");
+      var overlayEnd  = document.getElementById("overlayEnd");
+      var hint     = document.getElementById("hint");
+      var progress = document.getElementById("progress");
+      var loader   = document.getElementById("loader");
+      var loaderPct = document.getElementById("loaderPct");
+
+      var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var mqMobile = window.matchMedia("(max-width: 860px)");
+
+      var frames = [];
+      var loaded = 0;
+      var ready = false;
+      var preloading = false;
+      var dpr = 1;
+      var mode = "scrub";
+      var rafPending = false;
+
+      function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+      function roundRectPath(c, x, y, w, h, r) {
+        if (c.roundRect) { c.beginPath(); c.roundRect(x, y, w, h, r); return; }
+        c.beginPath();
+        c.moveTo(x + r, y);
+        c.arcTo(x + w, y, x + w, y + h, r);
+        c.arcTo(x + w, y + h, x, y + h, r);
+        c.arcTo(x, y + h, x, y, r);
+        c.arcTo(x, y, x + w, y, r);
+        c.closePath();
+      }
+
+      function sizeCanvas() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(canvas.clientWidth * dpr);
+        canvas.height = Math.round(canvas.clientHeight * dpr);
+      }
+
+      function drawFrame(idx, p) {
+        var img = frames[idx];
+        var cw = canvas.clientWidth, ch = canvas.clientHeight;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, cw, ch);
+
+        if (!img || !img.naturalWidth) return;
+
+        var ir = img.naturalWidth / img.naturalHeight;
+        var w, h;
+        if (cw / ch > ir) { h = ch * 0.84; w = h * ir; }
+        else { w = cw * 0.9; h = w / ir; }
+        var x = (cw - w) / 2, y = (ch - h) / 2;
+
+        // brand glow — warms from nothing to a pink/teal halo as the notebook finishes
+        var cx = cw / 2, cy = ch / 2;
+        var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.95);
+        g.addColorStop(0, "rgba(232,25,110," + (0.24 * p).toFixed(3) + ")");
+        g.addColorStop(0.55, "rgba(29,189,189," + (0.15 * p).toFixed(3) + ")");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, cw, ch);
+
+        // soft drop shadow + paper-white panel behind the frame
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.55)";
+        ctx.shadowBlur = 48;
+        ctx.shadowOffsetY = 22;
+        roundRectPath(ctx, x, y, w, h, 16);
+        ctx.fillStyle = "#F9F9F9";
+        ctx.fill();
+        ctx.restore();
+
+        // the frame itself, clipped to rounded corners
+        ctx.save();
+        roundRectPath(ctx, x, y, w, h, 16);
+        ctx.clip();
+        ctx.drawImage(img, x, y, w, h);
+        ctx.restore();
+      }
+
+      // opacity ramp: fade in, hold, fade out across a [a,b,c,d] window
+      function ramp(p, a, b, c, d) {
+        if (p <= a || p >= d) return 0;
+        if (p < b) return (p - a) / (b - a);
+        if (p <= c) return 1;
+        return 1 - (p - c) / (d - c);
+      }
+
+      function updateOverlays(p) {
+        overlayMain.style.opacity = ramp(p, 0.06, 0.2, 0.5, 0.66);
+        overlayEnd.style.opacity = ramp(p, 0.82, 0.9, 1.01, 1.02);
+        hint.style.opacity = p < 0.04 ? 1 : 0;
+      }
+
+      function render() {
+        rafPending = false;
+        if (mode !== "scrub") return;
+        var total = track.offsetHeight - window.innerHeight;
+        var top = track.getBoundingClientRect().top;
+        var p = total > 0 ? clamp(-top / total, 0, 1) : 0;
+        var idx = Math.round(p * (FRAME_COUNT - 1));
+        drawFrame(idx, p);
+        updateOverlays(p);
+        progress.style.transform = "scaleX(" + p + ")";
+      }
+
+      function onScroll() {
+        if (!rafPending) { rafPending = true; requestAnimationFrame(render); }
+      }
+      function onResize() {
+        if (mode !== "scrub") return;
+        sizeCanvas();
+        render();
+      }
+
+      function preload() {
+        if (preloading) return;
+        preloading = true;
+        for (var i = 0; i < FRAME_COUNT; i++) {
+          var im = new Image();
+          im.onload = im.onerror = function () {
+            loaded++;
+            loaderPct.textContent = Math.round((loaded / FRAME_COUNT) * 100) + "%";
+            if (loaded >= FRAME_COUNT) {
+              ready = true;
+              loader.classList.add("is-hidden");
+              render();
+            }
+          };
+          im.src = framePath(i);
+          frames[i] = im;
+        }
+      }
+
+      function setMode() {
+        mode = mqReduce.matches ? "static" : (mqMobile.matches ? "video" : "scrub");
+        stage.classList.remove("mode-scrub", "mode-video", "mode-static");
+        stage.classList.add("mode-" + mode);
+
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+
+        if (mode === "scrub") {
+          window.addEventListener("resize", onResize);
+          window.addEventListener("scroll", onScroll, { passive: true });
+          sizeCanvas();
+          if (ready) { render(); }
+          else { drawFrame(0, 0); preload(); }
+        } else if (mode === "video") {
+          var pr = video.play();
+          if (pr && pr.catch) { pr.catch(function () {}); }
+        }
+      }
+
+      setMode();
+      if (mqReduce.addEventListener) mqReduce.addEventListener("change", setMode);
+      if (mqMobile.addEventListener) mqMobile.addEventListener("change", setMode);
+    })();
+  </script>
+
+</body>
+</html>

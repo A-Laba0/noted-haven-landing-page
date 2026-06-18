@@ -455,6 +455,71 @@
     .cta-band p { margin: 14px auto 0; max-width: 46ch; color: var(--ink-soft); font-size: 1.06rem; }
     .cta-band .hero-cta { justify-content: center; }
 
+    /* ── Motion teaser: previews the scroll-driven animation on showcase.html ── */
+    .motion .wrap {
+      display: grid;
+      grid-template-columns: 1.04fr 0.96fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+    .motion-copy h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; margin-top: 12px; }
+    .motion-copy h2 em { font-style: normal; color: var(--pink); }
+    .motion-copy p { margin-top: 14px; color: var(--ink-soft); font-size: 1.06rem; max-width: 42ch; }
+    .motion-copy .hero-cta { margin-top: 26px; }
+    .motion-copy .btn svg { width: 16px; height: 16px; transition: transform 0.18s ease; }
+    .motion-copy .btn:hover svg { transform: translateX(4px); }
+
+    .motion-stage {
+      position: relative;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(155deg, var(--pink-tint), var(--teal-tint));
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 4vw, 44px);
+      overflow: hidden;
+    }
+    .motion-art { width: 100%; height: auto; display: block; }
+    .motion-art path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .ms-ink  { stroke: var(--ink); }
+    .ms-teal { stroke: var(--teal); }
+    .ms-pink { stroke: var(--pink); }
+
+    /* each stroke draws itself once the panel scrolls into view */
+    .motion-art .draw { stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; }
+    .motion-stage.is-visible .draw { animation: ms-draw 0.9s ease forwards; }
+    .motion-stage.is-visible .draw--2 { animation-delay: 0.25s; }
+    .motion-stage.is-visible .draw--3 { animation-delay: 0.7s; }
+    .motion-stage.is-visible .draw--4 { animation-delay: 0.95s; }
+    .motion-stage.is-visible .draw--5 { animation-delay: 1.5s; animation-duration: 1.2s; }
+    .motion-stage.is-visible .draw--6 { animation-delay: 2.5s; }
+    @keyframes ms-draw { from { stroke-dashoffset: 100; opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
+
+    .motion-art .ring {
+      opacity: 0; fill: var(--paper); stroke: var(--ink); stroke-width: 2.5;
+      transform-box: fill-box; transform-origin: center;
+    }
+    .motion-stage.is-visible .ring { animation: ms-pop 0.4s ease 0.45s forwards; }
+    @keyframes ms-pop { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: scale(1); } }
+
+    .motion-badge {
+      position: absolute; bottom: 16px; right: 16px;
+      display: inline-flex; align-items: center; gap: 9px;
+      background: var(--white); border: 1px solid var(--line); border-radius: 999px;
+      padding: 7px 15px 7px 8px; box-shadow: var(--shadow);
+      font-family: var(--body); font-weight: 600; font-size: 0.82rem; color: var(--ink-soft);
+    }
+    .motion-badge .play {
+      width: 26px; height: 26px; border-radius: 50%; flex: none;
+      background: var(--pink); color: var(--white);
+      display: grid; place-items: center;
+    }
+    .motion-badge .play svg { width: 11px; height: 11px; margin-left: 1px; }
+    .motion-stage.is-visible .motion-badge .play { animation: ms-pulse 2.6s ease-in-out 2.8s infinite; }
+    @keyframes ms-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232, 25, 110, 0.5); }
+      50%      { box-shadow: 0 0 0 9px rgba(232, 25, 110, 0); }
+    }
+
     /* ── Footer ── */
     .site-footer { background: var(--ink); color: rgba(255,255,255,0.72); padding: 64px 0 32px; }
     .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 32px; }
@@ -481,6 +546,7 @@
       .products, .steps, .assurances-grid { grid-template-columns: 1fr; }
       .assurance p { max-width: 38ch; }
       .showcase .wrap { grid-template-columns: 1fr; }
+      .motion .wrap { grid-template-columns: 1fr; }
       .audience-grid { grid-template-columns: 1fr; }
       .about-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -745,6 +811,44 @@
         <div class="about-copy reveal">
           <p>Noted Haven started with a simple idea: stationery shouldn't be one-size-fits-all. So we let you shape every piece — the cover, the pages, the name on the front.</p>
           <p><strong>Every order is printed to your specs</strong>, which means no two are ever quite the same. Whether it's a gift for someone special or a treat for your own desk, it leaves our shop made just for you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE SHOWCASE TEASER -->
+    <section class="section motion">
+      <div class="wrap">
+        <div class="motion-copy reveal">
+          <span class="eyebrow">Interactive · New</span>
+          <h2>Watch a notebook <em>come to life</em></h2>
+          <p>Scroll through a custom piece as it's drawn, bound, and personalized — one stroke at a time.</p>
+          <div class="hero-cta">
+            <a class="btn btn--primary" href="showcase.html">See it in motion
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="motion-stage reveal">
+          <svg class="motion-art" viewBox="0 0 400 300" role="img" aria-label="A custom notebook drawing itself, line by line.">
+            <g transform="rotate(-4 200 150)">
+              <path class="draw draw--1 ms-ink" pathLength="100" stroke-width="3" d="M152 66 H298 a8 8 0 0 1 8 8 V236 a8 8 0 0 1 -8 8 H152 Z"/>
+              <path class="draw draw--2 ms-teal" pathLength="100" stroke-width="14" d="M152 66 V244"/>
+              <circle class="ring" cx="152" cy="92"  r="5"/>
+              <circle class="ring" cx="152" cy="125" r="5"/>
+              <circle class="ring" cx="152" cy="158" r="5"/>
+              <circle class="ring" cx="152" cy="191" r="5"/>
+              <circle class="ring" cx="152" cy="224" r="5"/>
+              <path class="draw draw--3 ms-teal" pathLength="100" stroke-width="2.5" d="M182 124 H286"/>
+              <path class="draw draw--4 ms-teal" pathLength="100" stroke-width="2.5" d="M182 152 H286"/>
+              <path class="draw draw--5 ms-pink" pathLength="100" stroke-width="3.4" d="M184 194 q8 -14 16 0 t16 0 t16 0 t16 0 t16 0"/>
+              <path class="draw draw--6 ms-pink" pathLength="100" stroke-width="3" d="M182 212 H272"/>
+            </g>
+          </svg>
+          <span class="motion-badge" aria-hidden="true">
+            <span class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+            Scroll to play
+          </span>
         </div>
       </div>
     </section>
