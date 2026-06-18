@@ -77,8 +77,8 @@
       cursor: pointer;
       transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
     }
-    .btn--primary { background: var(--pink-dark); color: var(--white); box-shadow: 0 10px 24px -12px rgba(232, 25, 110, 0.65); }
-    .btn--primary:hover { background: var(--pink-darker); transform: translateY(-2px); }
+    .btn--primary { background: var(--pink); color: var(--white); box-shadow: 0 10px 24px -12px rgba(232, 25, 110, 0.65); }
+    .btn--primary:hover { background: var(--pink-dark); transform: translateY(-2px); }
     .btn--ghost { background: transparent; color: var(--teal-dark); border-color: var(--teal); }
     .btn--ghost:hover { background: var(--teal-tint); transform: translateY(-2px); }
 
@@ -100,6 +100,7 @@
     .nav-links a { font-weight: 500; font-size: 0.96rem; color: var(--ink-soft); transition: color 0.18s ease; }
     .nav-links a:hover { color: var(--ink); }
     .nav-links .btn { padding: 10px 20px; font-size: 0.9rem; }
+    .nav-links a.btn--primary, .nav-links a.btn--primary:hover { color: var(--white); }
     .nav-toggle { display: none; }
 
     /* ── Hero ── */
@@ -266,6 +267,55 @@
     .notebook__name .caret { color: var(--teal-dark); font-weight: 600; animation: blink 1s steps(1) infinite; }
     @keyframes blink { 50% { opacity: 0; } }
 
+    /* ── Brand ticker: a slim scrolling strip of brand phrases below the hero ── */
+    .ticker {
+      background: linear-gradient(90deg, var(--pink-tint), var(--teal-tint));
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 0;
+    }
+    .ticker__viewport {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+              mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    }
+    .ticker__track {
+      display: flex;
+      width: max-content;
+      animation: ticker-scroll 50s linear infinite;
+      will-change: transform;
+    }
+    .ticker:hover .ticker__track { animation-play-state: paused; }
+    .ticker__group {
+      display: flex;
+      flex: none;
+      list-style: none;
+    }
+    .ticker__group li {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      font-family: var(--body);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .ticker__group li::after {
+      content: "";
+      flex: none;
+      width: 6px; height: 6px; border-radius: 50%;
+      margin: 0 clamp(22px, 4vw, 40px);
+      background: var(--pink);
+      opacity: 0.7;
+    }
+    .ticker__group li:nth-child(even)::after { background: var(--teal); }
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
     /* ── Section scaffolding ── */
     .section { padding: clamp(56px, 8vw, 96px) 0; }
     .section--tint { background: var(--white); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
@@ -379,6 +429,7 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
       .reveal { opacity: 1; transform: none; }
+      .ticker__track { animation: none; transform: none; }
     }
   </style>
 </head>
@@ -449,6 +500,28 @@
         </div>
       </div>
     </section>
+
+    <!-- BRAND TICKER -->
+    <div class="ticker" aria-label="What makes Noted Haven yours">
+      <div class="ticker__viewport">
+        <div class="ticker__track">
+          <ul class="ticker__group">
+            <li>Custom-printed</li>
+            <li>Handcrafted</li>
+            <li>Designed by you</li>
+            <li>Made in the Philippines</li>
+            <li>Free design preview</li>
+          </ul>
+          <ul class="ticker__group" aria-hidden="true">
+            <li>Custom-printed</li>
+            <li>Handcrafted</li>
+            <li>Designed by you</li>
+            <li>Made in the Philippines</li>
+            <li>Free design preview</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <!-- ASSURANCES -->
     <section class="assurances section--tint">
