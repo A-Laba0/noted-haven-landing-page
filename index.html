@@ -342,6 +342,9 @@
     /* ── Products ── */
     .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
     .product {
+      position: relative;
+      isolation: isolate;
+      --mx: 50%; --my: 50%;
       background: var(--paper);
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -349,6 +352,28 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
     .section--tint .product { background: var(--white); }
+    /* keep all card content above the spotlight layers */
+    .product > * { position: relative; z-index: 1; }
+    /* interior spotlight — a faint brand wash that follows the cursor */
+    .product::before {
+      content: ""; position: absolute; inset: 0; z-index: 0;
+      border-radius: inherit; pointer-events: none;
+      background: radial-gradient(180px circle at var(--mx) var(--my),
+        rgba(232, 25, 110, 0.10), rgba(29, 189, 189, 0.06) 45%, transparent 72%);
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    /* glowing brand edge — lights up the border where the cursor is */
+    .product::after {
+      content: ""; position: absolute; inset: 0; z-index: 0;
+      border-radius: inherit; pointer-events: none; padding: 1.5px;
+      background: radial-gradient(220px circle at var(--mx) var(--my),
+        rgba(232, 25, 110, 0.65), rgba(29, 189, 189, 0.45) 45%, transparent 78%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .product:hover::before, .product:hover::after { opacity: 1; }
     .product:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; }
     .product__icon {
       width: 52px; height: 52px; border-radius: 12px;
@@ -729,6 +754,19 @@
         });
       }, { threshold: 0.15 });
       items.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Product cards: follow the cursor with a brand spotlight (skip when reduced motion is preferred)
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var cards = document.querySelectorAll('.product');
+      cards.forEach(function (card) {
+        card.addEventListener('pointermove', function (e) {
+          var r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+        });
+      });
     })();
   </script>
 
