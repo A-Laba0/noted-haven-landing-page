@@ -105,18 +105,21 @@
 
     /* ── Hero ── */
     .hero { position: relative; background: var(--paper); padding: clamp(48px, 8vw, 96px) 0 clamp(64px, 8vw, 112px); }
-    /* dot grid — paints over the aurora so the texture reads on top of the glow */
+    /* airy brand backdrop — the generated hero illustration, kept faint so text stays crisp */
     .hero-bg {
       position: absolute; inset: 0; z-index: 0; pointer-events: none;
-      background-image: radial-gradient(rgba(29, 189, 189, 0.10) 1.1px, transparent 1.3px);
-      background-size: 24px 24px;
-      -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent);
-              mask-image: linear-gradient(180deg, #000 70%, transparent);
+      background-image: url("images/hero-bg.png");
+      background-size: cover;
+      background-position: center top;
+      opacity: 0.5;
+      -webkit-mask-image: linear-gradient(180deg, #000 62%, transparent);
+              mask-image: linear-gradient(180deg, #000 62%, transparent);
     }
 
     /* ── Aurora: soft drifting brand-colored glows behind the hero ── */
     .aurora {
       position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+      opacity: 0.7; /* dimmed so it layers gently under the hero illustration */
       -webkit-mask-image: linear-gradient(180deg, #000 66%, transparent);
               mask-image: linear-gradient(180deg, #000 66%, transparent);
     }
@@ -375,17 +378,55 @@
     }
     .product:hover::before, .product:hover::after { opacity: 1; }
     .product:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: transparent; }
-    .product__icon {
-      width: 52px; height: 52px; border-radius: 12px;
-      background: var(--teal-tint); color: var(--teal-dark);
-      display: grid; place-items: center; margin-bottom: 20px;
-    }
-    .product__icon svg { width: 26px; height: 26px; }
     .product h3 { font-size: 1.35rem; font-weight: 700; }
     .product p { margin-top: 10px; color: var(--ink-soft); font-size: 0.98rem; }
     .product__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; font-weight: 600; color: var(--pink); font-family: var(--body); }
     .product__link svg { width: 16px; height: 16px; transition: transform 0.18s ease; }
     .product:hover .product__link svg { transform: translateX(4px); }
+    /* real product photography in place of the old glyph */
+    .product__media {
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+    }
+    .product__media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .product:hover .product__media img { transform: scale(1.03); }
+
+    /* ── Showcase: the full range, side by side with the catalogue link ── */
+    .showcase .wrap {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+    .showcase-media {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+    .showcase-media img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+    .showcase-copy h2 { font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; margin-top: 12px; }
+    .showcase-copy h2 em { font-style: normal; color: var(--pink); }
+    .showcase-copy p { margin-top: 14px; color: var(--ink-soft); font-size: 1.06rem; max-width: 42ch; }
+    .showcase-copy .hero-cta { margin-top: 26px; }
+
+    /* ── Audience: who each piece is made for ── */
+    .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+    .audience-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .audience-card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; display: block; }
+    .audience-card figcaption { padding: 22px 26px 26px; }
+    .audience-card h3 { font-size: 1.25rem; font-weight: 700; }
+    .audience-card p { margin-top: 8px; color: var(--ink-soft); font-size: 0.98rem; }
 
     /* ── How it works (real sequence) ── */
     .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
@@ -439,6 +480,8 @@
       .hero-sub { max-width: none; }
       .products, .steps, .assurances-grid { grid-template-columns: 1fr; }
       .assurance p { max-width: 38ch; }
+      .showcase .wrap { grid-template-columns: 1fr; }
+      .audience-grid { grid-template-columns: 1fr; }
       .about-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -585,8 +628,8 @@
         </div>
         <div class="products">
           <article class="product reveal">
-            <div class="product__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2Z"/><path d="M9 7h6M9 11h6"/></svg>
+            <div class="product__media">
+              <img src="images/product-notebook-pink.png" width="1254" height="1254" loading="lazy" decoding="async" alt="A personalized hot-pink notebook with a teal elastic band." />
             </div>
             <h3>Notebooks</h3>
             <p>Lined, dotted, or blank pages bound in a cover you design. Add a name, a date, or a quote that means something.</p>
@@ -596,8 +639,8 @@
           </article>
 
           <article class="product reveal">
-            <div class="product__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
+            <div class="product__media">
+              <img src="images/product-notepad-teal.png" width="1254" height="1254" loading="lazy" decoding="async" alt="A tear-off notepad with a teal header band and a thin pink accent line." />
             </div>
             <h3>Notepads</h3>
             <p>Tear-off pads for to-do lists, meeting notes, and grocery runs — topped with your name, team, or logo.</p>
@@ -607,8 +650,8 @@
           </article>
 
           <article class="product reveal">
-            <div class="product__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18l-5-4-5 4Z"/></svg>
+            <div class="product__media">
+              <img src="images/product-bookmarks-set.png" width="1254" height="1254" loading="lazy" decoding="async" alt="A set of three tasselled bookmarks in pink, teal, and white." />
             </div>
             <h3>Bookmarks</h3>
             <p>Sturdy, printed keepsakes that hold your page and your style. Lovely as gifts or as a little treat for yourself.</p>
@@ -621,13 +664,45 @@
     </section>
 
     <!-- EXPLORE PRODUCTS -->
-    <section class="section cta-band">
-      <div class="wrap reveal">
-        <span class="eyebrow">A closer look</span>
-        <h2>See every piece up close</h2>
-        <p>Explore our custom notebooks, notepads, and bookmarks in detail — materials, sizes, and personalization options.</p>
-        <div class="hero-cta">
-          <a class="btn btn--primary" href="products.html">View all products</a>
+    <section class="section showcase">
+      <div class="wrap">
+        <div class="showcase-media reveal">
+          <img src="images/product-range-flatlay.png" width="1536" height="1024" loading="lazy" decoding="async" alt="The Noted Haven range laid out together: a pink notebook, a teal notepad, bookmarks, and a pen." />
+        </div>
+        <div class="showcase-copy reveal">
+          <span class="eyebrow">A closer look</span>
+          <h2>See every piece up close</h2>
+          <p>Explore our custom notebooks, notepads, and bookmarks in detail — materials, sizes, and personalization options.</p>
+          <div class="hero-cta">
+            <a class="btn btn--primary" href="products.html">View all products</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MADE FOR YOUR DAY -->
+    <section class="section section--tint audience">
+      <div class="wrap">
+        <div class="section-head section-head--center reveal">
+          <span class="eyebrow">Made for your day</span>
+          <h2>Whatever you're working toward</h2>
+          <p>From lecture halls to back-to-back meetings, your stationery should keep up — and feel like yours.</p>
+        </div>
+        <div class="audience-grid">
+          <figure class="audience-card reveal">
+            <img src="images/section-student.png" width="1536" height="1024" loading="lazy" decoding="async" alt="A student writing in a personalized pink notebook at a tidy desk." />
+            <figcaption>
+              <h3>For students</h3>
+              <p>A notebook for every subject and a bookmark for every read — named so they never get mixed up.</p>
+            </figcaption>
+          </figure>
+          <figure class="audience-card reveal">
+            <img src="images/section-professional.png" width="1536" height="1024" loading="lazy" decoding="async" alt="A professional's desk with a teal-accented notepad, pen, and laptop." />
+            <figcaption>
+              <h3>For professionals</h3>
+              <p>Branded notepads and notebooks that look the part on every desk and in every meeting.</p>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>

@@ -180,6 +180,17 @@
       width: 4px; background: var(--accent);
     }
     .entry__kicker { color: var(--accent); }
+    /* product photo tile — a light frame so the white-background shot reads as intentional on the dark card */
+    .entry__media {
+      aspect-ratio: 1 / 1;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    }
+    .entry__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .entry__title { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800; margin-top: 12px; }
     .entry__lead { margin-top: 16px; color: var(--muted); font-size: 1.05rem; }
     .entry__for { margin-top: 22px; font-size: 0.98rem; color: rgba(255, 255, 255, 0.82); }
@@ -375,6 +386,9 @@
           <!-- Notebooks -->
           <article class="entry reveal" style="--accent: var(--teal);">
             <div class="entry__main">
+              <div class="entry__media">
+                <img src="images/product-notebook-personalized.png" width="1254" height="1254" loading="lazy" decoding="async" alt="A soft-white notebook with the name &quot;Maria&quot; printed in pink script across the cover." />
+              </div>
               <span class="eyebrow entry__kicker">Notebooks</span>
               <h3 class="entry__title">The one you actually carry</h3>
               <p class="entry__lead">Bound, covered, and printed to your spec — a notebook that feels like yours from the first page, not a generic one with a sticker on the front.</p>
@@ -408,6 +422,9 @@
           <!-- Notepads -->
           <article class="entry reveal" style="--accent: var(--pink);">
             <div class="entry__main">
+              <div class="entry__media">
+                <img src="images/product-notepad-teal.png" width="1254" height="1254" loading="lazy" decoding="async" alt="A tear-off notepad with a teal header band and faint ruled lines." />
+              </div>
               <span class="eyebrow entry__kicker">Notepads</span>
               <h3 class="entry__title">Tear-off pads for a busy week</h3>
               <p class="entry__lead">For the lists that run your days — to-dos, meeting notes, grocery runs. Tear off the top sheet and the next one's already waiting, headed exactly how you want it.</p>
@@ -441,6 +458,9 @@
           <!-- Bookmarks -->
           <article class="entry reveal" style="--accent: var(--teal);">
             <div class="entry__main">
+              <div class="entry__media">
+                <img src="images/product-bookmarks-set.png" width="1254" height="1254" loading="lazy" decoding="async" alt="Three tasselled bookmarks in pink, teal, and white with simple geometric patterns." />
+              </div>
               <span class="eyebrow entry__kicker">Bookmarks</span>
               <h3 class="entry__title">Small keepsakes that hold your page</h3>
               <p class="entry__lead">Sturdy, printed, and finished by hand — lovely enough to gift, useful enough to keep. The little detail that makes a book feel looked-after.</p>
