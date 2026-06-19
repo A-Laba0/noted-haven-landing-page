@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Internal tool: keep it out of search indexes. -->
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Submissions · Noted Haven (Internal)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --paper:      #F9F9F9;
+      --white:      #FFFFFF;
+      --ink:        #16302F;
+      --ink-soft:   #5C6E6D;
+      --pink:       #E8196E;
+      --pink-dark:  #C9135C;
+      --teal:       #1DBDBD;
+      --teal-dark:  #15A0A0;
+      --teal-deep:  #117A7A;
+      --teal-tint:  #E6F7F7;
+      --line:       #E3E8E8;
+
+      --display: 'Bricolage Grotesque', system-ui, sans-serif;
+      --body:    'Hanken Grotesk', system-ui, sans-serif;
+
+      --maxw: 1080px;
+      --radius: 14px;
+      --shadow: 0 18px 50px -30px rgba(22, 48, 47, 0.4);
+    }
+
+    body {
+      font-family: var(--body);
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2 { font-family: var(--display); line-height: 1.1; letter-spacing: -0.02em; }
+    a { color: inherit; }
+
+    .wrap { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .eyebrow {
+      display: inline-block; font-weight: 600; font-size: 0.76rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal-dark);
+    }
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+
+    /* ── Top bar ── */
+    .bar { background: var(--white); border-bottom: 1px solid var(--line); }
+    .bar-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand-mark { display: flex; align-items: center; gap: 11px; font-family: var(--display); font-weight: 800; font-size: 1.1rem; }
+    .brand-mark img { width: 32px; height: 32px; object-fit: contain; }
+    .brand-mark span { color: var(--pink); }
+    .bar-tag {
+      font-family: var(--body); font-weight: 600; font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-soft);
+      border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px;
+    }
+
+    /* ── Page head ── */
+    .page { padding: clamp(32px, 5vw, 56px) 0 64px; }
+    .page-head h1 { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; margin: 10px 0 8px; }
+    .count { font-size: 1rem; color: var(--ink-soft); }
+    .count #count-num { font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--pink); margin-right: 4px; }
+
+    /* ── Toolbar ── */
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 26px; }
+    .search { position: relative; flex: 1 1 260px; max-width: 380px; }
+    .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--ink-soft); pointer-events: none; }
+    .search input {
+      width: 100%; font-family: var(--body); font-size: 0.96rem; color: var(--ink);
+      background: var(--white); border: 1px solid var(--line); border-radius: 10px;
+      padding: 12px 14px 12px 42px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .search input::placeholder { color: var(--ink-soft); opacity: 0.8; }
+    .search input:focus-visible { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px var(--teal-tint); }
+    .btn-ghost {
+      font-family: var(--body); font-weight: 600; font-size: 0.92rem;
+      padding: 11px 22px; border-radius: 999px; border: 2px solid var(--teal);
+      color: var(--teal-dark); background: transparent; cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+    .btn-ghost:hover { background: var(--teal-tint); }
+    .btn-ghost:active { transform: translateY(1px); }
+
+    .result-note { margin-top: 16px; font-size: 0.9rem; color: var(--ink-soft); }
+
+    /* ── Table ── */
+    .card {
+      margin-top: 16px; background: var(--white);
+      border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    thead th {
+      text-align: left; font-family: var(--body); font-weight: 600;
+      font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--teal-deep); background: var(--teal-tint);
+      padding: 13px 18px; white-space: nowrap; border-bottom: 1px solid var(--line);
+    }
+    tbody td { padding: 13px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--paper); }
+    .col-date { white-space: nowrap; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+    .col-name { font-weight: 600; }
+    .email-link { color: var(--teal-dark); text-decoration: none; }
+    .email-link:hover { text-decoration: underline; }
+    .col-msg { color: var(--ink); min-width: 240px; max-width: 460px; }
+    .muted { color: var(--ink-soft); }
+    .empty-cell { padding: 40px 18px; text-align: center; color: var(--ink-soft); }
+
+    /* ── State messages (loading / config / empty / error) ── */
+    .state {
+      margin-top: 16px; padding: 48px 24px; text-align: center;
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: var(--radius); color: var(--ink-soft);
+    }
+    .state h2 { font-size: 1.25rem; color: var(--ink); margin-bottom: 10px; }
+    .state p { max-width: 52ch; margin: 0 auto; font-size: 0.98rem; }
+    .state code { background: var(--teal-tint); color: var(--teal-deep); padding: 2px 7px; border-radius: 6px; font-size: 0.9em; }
+    .state--error h2 { color: var(--pink-dark); }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 0 18px; }
+      .toolbar { gap: 10px; }
+      .search { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="bar">
+    <div class="wrap bar-inner">
+      <span class="brand-mark">
+        <img src="brand_assets/Noted-Haven-Logo.png" alt="" />
+        Noted <span>Haven</span>
+      </span>
+      <span class="bar-tag">Internal</span>
+    </div>
+  </header>
+
+  <main class="wrap page">
+    <div class="page-head">
+      <span class="eyebrow">Internal · Contact form</span>
+      <h1>Submissions</h1>
+      <p class="count"><span id="count-num">—</span><span id="count-label">submissions</span></p>
+    </div>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search" type="search" placeholder="Search by name or email" aria-label="Search submissions by name or email" autocomplete="off" />
+      </div>
+      <button id="refresh" class="btn-ghost" type="button">Refresh</button>
+    </div>
+
+    <p class="result-note" id="result-note" hidden></p>
+
+    <div class="card" id="table-wrap" hidden>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-date">Date</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="state" id="state" hidden></div>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // ─────────────────────────────────────────────────────────────
+    //  PASTE YOUR SUPABASE CREDENTIALS HERE
+    //  Find them in your Supabase dashboard → Project Settings → API.
+    //  (Browser pages can't read .env, so these live in the page.)
+    // ─────────────────────────────────────────────────────────────
+    const SUPABASE_URL = "https://eaggsagfwmniphxalibi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhZ2dzYWdmd21uaXBoeGFsaWJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4MzEzNDUsImV4cCI6MjA5NzQwNzM0NX0.PnbGB59GULdM-Rxee-8SOUhVSDGvyDcj8GlwpMaP-VU";
+    // ─────────────────────────────────────────────────────────────
+
+    const searchEl     = document.getElementById('search');
+    const refreshEl    = document.getElementById('refresh');
+    const rowsEl       = document.getElementById('rows');
+    const tableWrap    = document.getElementById('table-wrap');
+    const stateEl      = document.getElementById('state');
+    const resultNoteEl = document.getElementById('result-note');
+    const countNumEl   = document.getElementById('count-num');
+    const countLabelEl = document.getElementById('count-label');
+
+    let allRows = [];
+
+    function isConfigured() {
+      return SUPABASE_URL && SUPABASE_ANON_KEY
+        && SUPABASE_URL !== 'PASTE_HERE' && SUPABASE_ANON_KEY !== 'PASTE_HERE';
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return iso;
+      return d.toLocaleString(undefined, {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: 'numeric', minute: '2-digit'
+      });
+    }
+
+    function setCount(n) {
+      countNumEl.textContent = String(n);
+      countLabelEl.textContent = (n === 1 ? 'submission' : 'submissions');
+    }
+
+    function showState(kind, detail) {
+      tableWrap.hidden = true;
+      resultNoteEl.hidden = true;
+      stateEl.hidden = false;
+      stateEl.className = 'state' + (kind === 'error' ? ' state--error' : '');
+      stateEl.replaceChildren();
+
+      const h = document.createElement('h2');
+      const p = document.createElement('p');
+
+      if (kind === 'loading') {
+        stateEl.replaceChildren(Object.assign(p, { textContent: 'Loading submissions…' }));
+        return;
+      }
+      if (kind === 'config') {
+        h.textContent = 'Connect your Supabase project';
+        p.innerHTML = 'Open <code>admin.html</code> and paste your project URL and anon key into the '
+          + '<code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> constants near the bottom of the file, then reload.';
+      } else if (kind === 'empty') {
+        h.textContent = 'No submissions yet';
+        p.textContent = 'New messages from the contact form will show up here.';
+      } else if (kind === 'error') {
+        h.textContent = 'Couldn’t load submissions';
+        p.textContent = detail || 'Please check your credentials and try again.';
+      }
+      stateEl.replaceChildren(h, p);
+    }
+
+    function makeRow(r) {
+      const tr = document.createElement('tr');
+
+      const dateTd = document.createElement('td');
+      dateTd.className = 'col-date';
+      dateTd.textContent = fmtDate(r.created_at);
+      tr.appendChild(dateTd);
+
+      const nameTd = document.createElement('td');
+      nameTd.className = 'col-name';
+      nameTd.textContent = r.name || '—';
+      tr.appendChild(nameTd);
+
+      const emailTd = document.createElement('td');
+      emailTd.className = 'col-email';
+      if (r.email) {
+        const a = document.createElement('a');
+        a.className = 'email-link';
+        a.href = 'mailto:' + r.email;
+        a.textContent = r.email;
+        emailTd.appendChild(a);
+      } else {
+        emailTd.textContent = '—';
+        emailTd.classList.add('muted');
+      }
+      tr.appendChild(emailTd);
+
+      const msgTd = document.createElement('td');
+      msgTd.className = 'col-msg';
+      if (r.message && r.message.trim()) {
+        msgTd.textContent = r.message;
+      } else {
+        msgTd.textContent = '—';
+        msgTd.classList.add('muted');
+      }
+      tr.appendChild(msgTd);
+
+      return tr;
+    }
+
+    function applyFilter() {
+      const raw = searchEl.value.trim();
+      const q = raw.toLowerCase();
+      const filtered = q
+        ? allRows.filter(r =>
+            (r.name || '').toLowerCase().includes(q) ||
+            (r.email || '').toLowerCase().includes(q))
+        : allRows;
+
+      rowsEl.replaceChildren();
+      if (!filtered.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 4;
+        td.className = 'empty-cell';
+        td.textContent = q ? `No submissions match “${raw}”.` : 'No submissions yet.';
+        tr.appendChild(td);
+        rowsEl.appendChild(tr);
+      } else {
+        const frag = document.createDocumentFragment();
+        filtered.forEach(r => frag.appendChild(makeRow(r)));
+        rowsEl.appendChild(frag);
+      }
+
+      if (q) {
+        resultNoteEl.hidden = false;
+        resultNoteEl.textContent = `Showing ${filtered.length} of ${allRows.length}`;
+      } else {
+        resultNoteEl.hidden = true;
+      }
+    }
+
+    async function load() {
+      if (!isConfigured()) { showState('config'); return; }
+      showState('loading');
+
+      let supabase;
+      try {
+        supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      } catch (e) {
+        showState('error', e && e.message);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('signups')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        showState('error', error.message);
+        return;
+      }
+
+      allRows = data || [];
+      setCount(allRows.length);
+
+      if (!allRows.length) { showState('empty'); return; }
+
+      stateEl.hidden = true;
+      tableWrap.hidden = false;
+      applyFilter();
+    }
+
+    searchEl.addEventListener('input', applyFilter);
+    refreshEl.addEventListener('click', load);
+
+    load();
+  </script>
+
+</body>
+</html>
