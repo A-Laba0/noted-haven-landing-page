@@ -538,6 +538,7 @@
       background: linear-gradient(90deg, var(--pink), var(--teal));
     }
     .contact-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .contact-form[hidden] { display: none; } /* beats the grid display when JS hides the form */
     .field { display: flex; flex-direction: column; gap: 8px; }
     .field--full { grid-column: 1 / -1; }
     .field label { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
@@ -582,6 +583,18 @@
     .contact-confirm__icon svg { width: 30px; height: 30px; }
     .contact-confirm h3 { font-size: clamp(1.4rem, 2.6vw, 1.7rem); font-weight: 700; }
     .contact-confirm p { margin-top: 10px; color: var(--ink-soft); font-size: 1rem; max-width: 38ch; margin-inline: auto; }
+    /* understated text link to bring the cleared form back */
+    .contact-confirm__again {
+      margin-top: 22px;
+      display: inline-block;
+      padding: 4px 2px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--body); font-weight: 600; font-size: 0.95rem;
+      color: var(--pink);
+      border-bottom: 1.5px solid transparent;
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+    .contact-confirm__again:hover { color: var(--pink-dark); border-bottom-color: currentColor; }
     @keyframes confirm-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     @media (max-width: 560px) {
       .contact-form { grid-template-columns: 1fr; }
@@ -1059,8 +1072,10 @@
     (function () {
       var form = document.querySelector('.contact-form');
       if (!form) return;
-      var card = form.closest('.contact-card');
+      var card = form.closest('.contact-card') || form.parentNode;
       var btn = form.querySelector('button[type="submit"]');
+      var submitLabel = btn.textContent;
+      var confirmBox = null;
 
       function showError(msg) {
         var el = form.querySelector('.form-error');
@@ -1073,18 +1088,34 @@
         el.textContent = msg;
       }
 
+      function resetForm() {
+        if (confirmBox) { confirmBox.remove(); confirmBox = null; }
+        var stale = form.querySelector('.form-error');
+        if (stale) stale.remove();
+        form.reset();
+        btn.disabled = false;
+        btn.textContent = submitLabel;
+        form.hidden = false;
+        var first = form.querySelector('input, textarea');
+        if (first) first.focus();
+      }
+
       function showConfirmation() {
-        var target = card || form;
-        target.innerHTML =
-          '<div class="contact-confirm" role="status" tabindex="-1">' +
-            '<span class="contact-confirm__icon" aria-hidden="true">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
-            '</span>' +
-            '<h3>Thanks! We\'ll be in touch soon.</h3>' +
-            '<p>We\'ve got your message and will reply with a free design preview shortly.</p>' +
-          '</div>';
-        var box = target.querySelector('.contact-confirm');
-        if (box) box.focus();
+        confirmBox = document.createElement('div');
+        confirmBox.className = 'contact-confirm';
+        confirmBox.setAttribute('role', 'status');
+        confirmBox.setAttribute('tabindex', '-1');
+        confirmBox.innerHTML =
+          '<span class="contact-confirm__icon" aria-hidden="true">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+          '</span>' +
+          '<h3>Thanks! We\'ll be in touch soon.</h3>' +
+          '<p>We\'ve got your message and will reply with a free design preview shortly.</p>' +
+          '<button type="button" class="contact-confirm__again">Send another message</button>';
+        form.hidden = true;
+        card.appendChild(confirmBox);
+        confirmBox.focus();
+        confirmBox.querySelector('.contact-confirm__again').addEventListener('click', resetForm);
       }
 
       form.addEventListener('submit', function (e) {
@@ -1092,14 +1123,13 @@
         var stale = form.querySelector('.form-error');
         if (stale) stale.remove();
 
-        var originalLabel = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'Sending…';
 
         function fail() {
           showError('Sorry — we couldn’t send your message just now. Please try again.');
           btn.disabled = false;
-          btn.textContent = originalLabel;
+          btn.textContent = submitLabel;
         }
 
         var data = new FormData(form);
