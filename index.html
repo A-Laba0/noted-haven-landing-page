@@ -559,6 +559,30 @@
     }
     .field textarea { resize: vertical; min-height: 132px; }
     .contact-form .btn { grid-column: 1 / -1; justify-self: start; margin-top: 4px; }
+    .contact-form .btn[disabled] { opacity: 0.7; cursor: progress; }
+    /* polite inline error — uses the brand pink tint already in the palette */
+    .form-error {
+      grid-column: 1 / -1; margin: 0;
+      padding: 11px 15px;
+      font-size: 0.92rem; font-weight: 600;
+      color: var(--pink-darker);
+      background: var(--pink-tint);
+      border: 1px solid rgba(232, 25, 110, 0.22);
+      border-radius: 10px;
+    }
+    /* success state — mirrors the teal icon-circle used in the assurances row */
+    .contact-confirm { text-align: center; padding: 14px 8px 10px; animation: confirm-in 0.5s ease both; }
+    .contact-confirm:focus { outline: none; }
+    .contact-confirm__icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      margin: 0 auto 18px;
+      display: grid; place-items: center;
+      background: var(--teal-tint); color: var(--teal-deep);
+    }
+    .contact-confirm__icon svg { width: 30px; height: 30px; }
+    .contact-confirm h3 { font-size: clamp(1.4rem, 2.6vw, 1.7rem); font-weight: 700; }
+    .contact-confirm p { margin-top: 10px; color: var(--ink-soft); font-size: 1rem; max-width: 38ch; margin-inline: auto; }
+    @keyframes confirm-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
     @media (max-width: 560px) {
       .contact-form { grid-template-columns: 1fr; }
     }
@@ -917,7 +941,7 @@
           <p>Share your idea and we'll reply with a free design preview — usually within a day.</p>
         </div>
         <div class="contact-card reveal">
-          <form class="contact-form" action="" method="post">
+          <form class="contact-form" action="/api/contact" method="post">
             <div class="field">
               <label for="contact-name">Name <span class="req" aria-hidden="true">*</span></label>
               <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Maria Santos" required />
@@ -1028,6 +1052,77 @@
           card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
           card.style.setProperty('--my', (e.clientY - r.top) + 'px');
         });
+      });
+    })();
+
+    // Contact form: submit in-place with fetch, then swap in an on-brand confirmation.
+    (function () {
+      var form = document.querySelector('.contact-form');
+      if (!form) return;
+      var card = form.closest('.contact-card');
+      var btn = form.querySelector('button[type="submit"]');
+
+      function showError(msg) {
+        var el = form.querySelector('.form-error');
+        if (!el) {
+          el = document.createElement('p');
+          el.className = 'form-error';
+          el.setAttribute('role', 'alert');
+          form.insertBefore(el, btn);
+        }
+        el.textContent = msg;
+      }
+
+      function showConfirmation() {
+        var target = card || form;
+        target.innerHTML =
+          '<div class="contact-confirm" role="status" tabindex="-1">' +
+            '<span class="contact-confirm__icon" aria-hidden="true">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' +
+            '</span>' +
+            '<h3>Thanks! We\'ll be in touch soon.</h3>' +
+            '<p>We\'ve got your message and will reply with a free design preview shortly.</p>' +
+          '</div>';
+        var box = target.querySelector('.contact-confirm');
+        if (box) box.focus();
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var stale = form.querySelector('.form-error');
+        if (stale) stale.remove();
+
+        var originalLabel = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+
+        function fail() {
+          showError('Sorry — we couldn’t send your message just now. Please try again.');
+          btn.disabled = false;
+          btn.textContent = originalLabel;
+        }
+
+        var data = new FormData(form);
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: data.get('name'),
+            email: data.get('email'),
+            message: data.get('message')
+          })
+        })
+          .then(function (res) {
+            return res.json().then(function (body) { return { ok: res.ok, body: body }; });
+          })
+          .then(function (result) {
+            if (result.ok && result.body && result.body.ok) {
+              showConfirmation();
+            } else {
+              fail();
+            }
+          })
+          .catch(fail);
       });
     })();
   </script>
