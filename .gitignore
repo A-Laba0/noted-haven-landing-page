@@ -1,4 +1,11 @@
 .vercel
 .claude/settings.local.json
+.claude/launch.json
 .env
 node_modules/
+
+# Playwright generated artifacts
+playwright-report/
+test-results/
+tests/screenshots/
+tests/qa-report.md

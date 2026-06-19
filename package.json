@@ -2,8 +2,15 @@
   "name": "noted-haven-landing-page",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "test": "playwright test"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "resend": "^6.14.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "dotenv": "^17.4.2"
   }
 }
